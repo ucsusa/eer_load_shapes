@@ -3,7 +3,7 @@
 UCS_load_profile_scaling/unscaled_shapes/
 UCS_load_profile_scaling/scaled_shapes/
 UCS_load_profile_scaling/scaling_inputs_MWh_original.csv
-
+input_data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

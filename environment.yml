@@ -1,0 +1,16 @@
+name: eer-process
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - pip
+  - numpy
+  - pandas
+  - matplotlib
+  - h5py
+  - tqdm
+  - seaborn
+  - snakemake-minimal
+  - xarray
+  - pip:
+    - us
