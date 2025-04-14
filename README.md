@@ -35,3 +35,8 @@ activate eer-process
     ```
 
     This script takes scaled input data from EER and 
+
+
+## Credits
+
+The script in `UCS_load_profile_scaling` was provided courtesy of @ryandrewjones from Evolved Energy Research.
