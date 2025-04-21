@@ -13,14 +13,24 @@ load_participation_url = ("https://raw.githubusercontent.com/ucsusa/ReEDS-2.0/"
                           "refs/heads/main/hourlize/inputs/load/"
                           "load_participation_factors_st_to_ba.csv")
 
+climate_scenario = ['Current', 'Decarb']
+datacenter_scenario = ['Low','High']
+
 input_data_path = "input_data/"
 results_path = "results/"
+
+
+rule targets:
+    input:
+        "dag.png",
+        expand("results/EER_{cs}_{dcs}DC_UCS_load_hourly.h5",
+        cs=climate_scenario, dcs=datacenter_scenario)
 
 rule retrieve_historical_data:
     output: f"{input_data_path}EER_IRAmoderate_load_hourly.h5"
     shell:
         f"""
-        curl -LO {input_data_path}{historical_data_url}
+        cd {input_data_path} && curl -LO {historical_data_url}
         """ 
 
 rule retrieve_disaggregation_data:
@@ -29,13 +39,11 @@ rule retrieve_disaggregation_data:
         df = pd.read_csv(county_to_ba_url)
         df.to_csv(str(output))
 
-
 rule retrieve_load_participation:
     output: f"{input_data_path}load_participation_factors_st_to_ba.csv"
     run:
         df = pd.read_csv(load_participation_url)
         df.to_csv(str(output)) 
-
 
 rule rescale_load_data:
     input:
@@ -60,6 +68,19 @@ rule unzip_scaled_data:
             outdir="/".join(outfile.split("/")[:-1])
             subprocess.run(f"7z x -o\"{outdir}\" \"{infile}\"")
         
+rule generate_scenarios:
+    input:
+        expand("input_data/{scenario}/{year}.csv",
+            scenario=scenarios, year=model_years),
+        load_participation=f"{input_data_path}load_participation_factors_st_to_ba.csv",
+        county_to_ba = f"{input_data_path}county2zone.csv",
+        historical_data = "input_data/EER_IRAmoderate_load_hourly.h5"
+    output:
+        expand("results/EER_{cs}_{dcs}DC_UCS_load_hourly.h5",
+        cs=climate_scenario, dcs=datacenter_scenario)
+    script:
+        "scripts/generate_scenarios.py"
+
 rule build_dag:
     input: "Snakefile"
     output:

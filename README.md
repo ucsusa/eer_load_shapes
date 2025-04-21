@@ -11,6 +11,9 @@ conda env create
 activate eer-process
 ```
 
+> [NOTE!]
+> The workflow requires users have [7zip](https://www.7-zip.org/download.html) installed.
+
 ## Workflow Steps
 
 1. Update the file `UCS_load_profile_scaling/scaling_inputs_MWh.csv`:

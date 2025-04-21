@@ -14,5 +14,6 @@ dependencies:
   - xarray
   - ipykernel
   - jupyterlab
+  - graphviz
   - pip:
     - us
