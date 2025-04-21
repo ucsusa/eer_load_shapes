@@ -39,4 +39,4 @@ activate eer-process
 
 ## Credits
 
-The script in `UCS_load_profile_scaling` was provided courtesy of @ryandrewjones from Evolved Energy Research.
+The script in `UCS_load_profile_scaling` was courtesy of [@ryandrewjones](github.com/ryandrewjones) from Evolved Energy Research.

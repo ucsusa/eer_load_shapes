@@ -1,5 +1,9 @@
 import pandas as pd
+import numpy as np
+import subprocess
 
+scenarios = ["current policy", "central high data center", "central"]
+model_years = np.arange(2025,2055, 5)
 
 historical_data_url = ("https://github.com/NREL/ReEDS-2.0/raw/refs/heads/"
                        "main/inputs/load/EER_IRAmoderate_load_hourly.h5")
@@ -31,3 +35,34 @@ rule retrieve_load_participation:
     run:
         df = pd.read_csv(load_participation_url)
         df.to_csv(str(output)) 
+
+
+rule rescale_load_data:
+    input:
+        expand("UCS_load_profile_scaling/unscaled_shapes/shape_outputs/{scenario}/{year}.csv.gz",
+        scenario=scenarios, year=model_years)
+    output:
+        expand("UCS_load_profile_scaling/scaled_shapes/{scenario}/{year}.csv.gz",
+        scenario=scenarios, year=model_years)
+    script:
+        "UCS_load_profile_scaling/main.py"
+
+rule unzip_scaled_data:
+    input:
+        expand("UCS_load_profile_scaling/scaled_shapes/{scenario}/{year}.csv.gz",
+            scenario=scenarios, year=model_years)
+    output:
+        expand("input_data/{scenario}/{year}.csv",
+            scenario=scenarios, year=model_years)
+    run:
+        for i, (infile, outfile) in enumerate(zip(input, output)):
+            print(f"{infile} > {outfile}")
+            outdir="/".join(outfile.split("/")[:-1])
+            subprocess.run(f"7z x -o\"{outdir}\" \"{infile}\"")
+        
+rule build_dag:
+    input: "Snakefile"
+    output:
+        "dag.png"
+    shell:
+        "snakemake --dag | dot -Tpng > {output}"

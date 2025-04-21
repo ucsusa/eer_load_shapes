@@ -12,5 +12,7 @@ dependencies:
   - seaborn
   - snakemake-minimal
   - xarray
+  - ipykernel
+  - jupyterlab
   - pip:
     - us
