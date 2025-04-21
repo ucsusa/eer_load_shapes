@@ -32,13 +32,19 @@ activate eer-process
 
     The resulting files will be stored in a new folder called `UCS_load_profile_scaling/scaled_shapes`.
 
-3. Run the script `eer_to_reeds_UCS.py` with 
+3. Run the script `scripts/generate_scenarios.py` with 
     ```bash
     python eer_to_reeds_UCS.py`
     ```
 
     This script takes scaled input data from EER and 
 
+
+## Snakemake Workflow
+
+The full workflow is shown in the figure below.
+
+![dag.png](dag.png)
 
 ## Credits
 
