@@ -88,7 +88,7 @@ def scale_profile(df, scaling_factors, subsector_group):
                 # Zero-to-positive case: distribute evenly across all hours
                 num_rows = mask.sum()
                 if num_rows > 0:
-                    scaled_df.loc[mask, state] = scaling_factor / num_rows
+                    scaled_df.loc[mask, state] = int(scaling_factor / num_rows)
                     print(f"  Zero-to-positive scaling applied for {state}, subsector_group: {subsector_group}")
             else:
                 # Normal scaling case

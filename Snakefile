@@ -47,6 +47,7 @@ rule retrieve_load_participation:
 
 rule rescale_load_data:
     input:
+        "UCS_load_profile_scaling/scaling_inputs_MWh.csv",
         expand("UCS_load_profile_scaling/unscaled_shapes/shape_outputs/{scenario}/{year}.csv.gz",
         scenario=scenarios, year=model_years)
     output:
