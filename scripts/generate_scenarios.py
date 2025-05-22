@@ -211,9 +211,9 @@ if __name__ == "__main__":
     # no_electrification_low_dc = frames[0]
     # electrification_high_dc = frames[1]
     electrification_low_dc = frame_dict['central']
-    no_electrification_low_dc = frames['current policy']
+    no_electrification_low_dc = frame_dict['current policy']
     no_electrification_high_dc = no_electrification_low_dc.copy()
-    electrification_high_dc = frames['central high data center']
+    electrification_high_dc = frame_dict['central high data center']
 
     # replace data center load
     # Define which rows to replace
