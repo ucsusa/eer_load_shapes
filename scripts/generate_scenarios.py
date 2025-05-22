@@ -179,6 +179,7 @@ if __name__ == "__main__":
     
     # load input files
     frames = []
+    frame_dict = {}
     for scenario in scenarios:
         files = glob(str(path/scenario)+'/*.csv')
         scenario_frames = []
@@ -194,6 +195,7 @@ if __name__ == "__main__":
                 scenario_frames.append(df)
         scenario_df = pd.concat(scenario_frames).reset_index(drop=True)
         frames.append(scenario_df)
+        frame_dict[scenario] = scenario_df
         print('\n')
 
 
@@ -205,19 +207,28 @@ if __name__ == "__main__":
     df_historical.index = pd.MultiIndex.from_product([list(range(2010,2025)), dt_index], names=['year','weather_datetime'])
 
 
-    electrification_low_dc = frames[2]
-    no_electrification_low_dc = frames[0]
-    electrification_high_dc = frames[1]
+    # electrification_low_dc = frames[2]
+    # no_electrification_low_dc = frames[0]
+    # electrification_high_dc = frames[1]
+    electrification_low_dc = frame_dict['central']
+    no_electrification_low_dc = frames['current policy']
     no_electrification_high_dc = no_electrification_low_dc.copy()
+    electrification_high_dc = frames['central high data center']
 
     # replace data center load
-    no_electrification_high_dc.loc[no_electrification_high_dc\
-                                   .subsector\
-                                   .str\
-                                   .contains('data center')] = electrification_high_dc.loc[electrification_high_dc\
-                                                                                        .subsector\
-                                                                                        .str\
-                                                                                        .contains('data center')]
+    # Define which rows to replace
+    replace_mask = no_electrification_high_dc['subsector'].str.contains('data center', na=False)
+
+    # Split the DataFrame
+    df_to_keep = no_electrification_high_dc[~replace_mask]
+    df_to_replace = electrification_high_dc[electrification_high_dc['subsector'].str.contains('data center', 
+                                                                                              na=False)]
+
+    # Combine them back
+    df_replace = pd.concat([df_to_keep, df_to_replace], ignore_index=True)
+
+    # Optional: sort to original order, if needed
+    no_electrification_high_dc = df_replace.sort_values(by=['sector', 'subsector']).reset_index(drop=True)
     
     output_name = { 'results/EER_Decarb_LowDC_UCS_load_hourly.h5':electrification_low_dc,
                     'results/EER_Current_LowDC_UCS_load_hourly.h5':no_electrification_low_dc,
