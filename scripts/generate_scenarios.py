@@ -210,13 +210,18 @@ if __name__ == "__main__":
     # electrification_low_dc = frames[2]
     # no_electrification_low_dc = frames[0]
     # electrification_high_dc = frames[1]
-    electrification_low_dc = frame_dict['central']
     no_electrification_low_dc = frame_dict['current policy']
+    no_electrification_no_dc = no_electrification_low_dc.copy()
     no_electrification_high_dc = no_electrification_low_dc.copy()
+    electrification_low_dc = frame_dict['central']
+    electrification_no_dc = electrification_low_dc.copy() # placeholder
     electrification_high_dc = frame_dict['central high data center']
+
 
     # replace data center load
     # Define which rows to replace
+
+    # ============== High Data Center ============
     replace_mask = no_electrification_high_dc['subsector'].str.contains('data center', na=False)
 
     # Split the DataFrame
@@ -229,11 +234,18 @@ if __name__ == "__main__":
 
     # Optional: sort to original order, if needed
     no_electrification_high_dc = df_replace.sort_values(by=['sector', 'subsector']).reset_index(drop=True)
+
+    
+    # ============== No Data Center ============
+    no_electrification_no_dc.loc[no_electrification_no_dc['subsector'].str.contains('data center', na=False), 'alabama':'wyoming'] = 0
+    electrification_no_dc.loc[electrification_no_dc['subsector'].str.contains('data center', na=False), 'alabama':'wyoming'] = 0
     
     output_name = { 'results/EER_Decarb_LowDC_UCS_load_hourly.h5':electrification_low_dc,
                     'results/EER_Current_LowDC_UCS_load_hourly.h5':no_electrification_low_dc,
                     'results/EER_Decarb_HighDC_UCS_load_hourly.h5':electrification_high_dc,
                     'results/EER_Current_HighDC_UCS_load_hourly.h5':no_electrification_high_dc,
+                    'results/EER_Decarb_NoDC_UCS_load_hourly.h5':electrification_no_dc,
+                    'results/EER_Current_NoDC_UCS_load_hourly.h5':no_electrification_no_dc,
                     }
 
     for i, (save_name, dataset) in enumerate(output_name.items()):

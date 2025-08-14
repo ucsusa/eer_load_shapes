@@ -14,7 +14,7 @@ load_participation_url = ("https://raw.githubusercontent.com/ucsusa/ReEDS-2.0/"
                           "load_participation_factors_st_to_ba.csv")
 
 climate_scenario = ['Current', 'Decarb']
-datacenter_scenario = ['Low','High']
+datacenter_scenario = ['No','Low','High']
 
 input_data_path = "input_data/"
 results_path = "results/"
