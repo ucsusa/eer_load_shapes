@@ -13,7 +13,7 @@ Setup
 2. Create a scaling inputs file (default: scaling_inputs_MWh.csv) with your desired scaling factors
 
 Directory Structure
-
+```
 UCS_load_profile_scaling/
 │
 ├── main.py                      # The scaling script
@@ -39,7 +39,7 @@ UCS_load_profile_scaling/
     └── scenario2/
         ├── 2025.csv.gz
         └── ...
-
+```
 Using the Script
 Basic Usage
 Run the script with default parameters:
